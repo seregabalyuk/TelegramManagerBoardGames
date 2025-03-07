@@ -6,7 +6,8 @@ from aiogram.filters.command import Command
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 # Объект бота
-bot = Bot(token="")
+token = open('token.txt').read().strip()
+bot = Bot(token=token)
 # Диспетчер
 dp = Dispatcher()
 
