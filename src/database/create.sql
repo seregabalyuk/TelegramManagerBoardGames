@@ -34,8 +34,9 @@ CREATE TABLE group_member (
 CREATE TABLE gameboards (
     users_id INT REFERENCES users(users_id),
     games_id INT REFERENCES games(games_id),
-    if_bought BOOLEAN,
-    if_free BOOLEAN,
+    if_bought BOOLEAN SET DEFAULT false,
+    if_free BOOLEAN SET DEFAULT false,
+    owner_user_id INT REFERENCES users(users_id),
     PRIMARY KEY (users_id, games_id)
 );
 
