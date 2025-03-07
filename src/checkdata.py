@@ -2,8 +2,8 @@ import psycopg2
 
 connect = psycopg2.connect(
 dbname="board_game_database",
-user="postgres",
-password="12345678",
+user="board_game_bot",
+password="bot",
 host="localhost",
 port="5432"
 )

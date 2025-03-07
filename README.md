@@ -23,9 +23,9 @@ sudo -u postgres psql # заходим в psql
 ```
 И там набираем
 ```sql
-ALTER USER postgres WITH PASSWORD '12345678'; -- меняем пароль
-CREATE DATABASE board_game_database OWNER postgres; -- создаем базу данных
-GRANT ALL PRIVILEGES ON DATABASE board_game_database TO postgres; -- даем все привилегии
+CREATE USER board_game_bot WITH PASSWORD 'bot'; -- добовляем пользователя
+CREATE DATABASE board_game_database OWNER board_game_bot; -- создаем базу данных
+GRANT ALL PRIVILEGES ON DATABASE board_game_database TO board_game_bot; -- даем все привилегии
 \c board_game_database -- переключаемся на нашу базу данных
 \i src/database/create.sql -- создаем таблицы
 ```
