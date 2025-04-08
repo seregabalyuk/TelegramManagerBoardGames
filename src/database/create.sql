@@ -25,24 +25,24 @@ CREATE TABLE shops(
 );
 
 CREATE TABLE group_member (
-    group_id INT REFERENCES group_users(group_id),
-    users_id INT REFERENCES users(users_id),
+    group_id INT REFERENCES group_users(group_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    users_id INT REFERENCES users(users_id) ON DELETE CASCADE ON UPDATE CASCADE,
     title VARCHAR(100) NOT NULL,
     PRIMARY KEY (group_id, users_id)
 );
 
 CREATE TABLE gameboards (
-    users_id INT REFERENCES users(users_id),
-    games_id INT REFERENCES games(games_id),
+    users_id INT REFERENCES users(users_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    games_id INT REFERENCES games(games_id) ON DELETE CASCADE ON UPDATE CASCADE,
     if_bought BOOLEAN SET DEFAULT false,
     if_free BOOLEAN SET DEFAULT false,
-    owner_user_id INT REFERENCES users(users_id),
+    owner_user_id INT REFERENCES users(users_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (users_id, games_id)
 );
 
 CREATE TABLE product (
-    games_id INT REFERENCES games(games_id),
-    shops_id INT REFERENCES shops(shops_id),
+    games_id INT REFERENCES games(games_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    shops_id INT REFERENCES shops(shops_id) ON DELETE CASCADE ON UPDATE CASCADE,
     Price FLOAT,
     PRIMARY KEY (games_id, shops_id)
 );

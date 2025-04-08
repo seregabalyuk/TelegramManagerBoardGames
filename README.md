@@ -14,7 +14,7 @@ deactivate
 ## Настраиваем PostgreSQL
 Для начала, установите PostgreSQL
 ```bash
-# хз что тут делать
+sudo apt install postgresql
 ```
 
 Потом:
