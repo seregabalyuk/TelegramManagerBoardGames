@@ -34,8 +34,8 @@ CREATE TABLE group_member (
 CREATE TABLE gameboards (
     users_id INT REFERENCES users(users_id) ON DELETE CASCADE ON UPDATE CASCADE,
     games_id INT REFERENCES games(games_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    if_bought BOOLEAN SET DEFAULT false,
-    if_free BOOLEAN SET DEFAULT false,
+    if_bought BOOLEAN DEFAULT false,
+    if_free BOOLEAN DEFAULT false,
     owner_user_id INT REFERENCES users(users_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (users_id, games_id)
 );

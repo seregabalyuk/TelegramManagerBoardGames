@@ -9,3 +9,5 @@ port="5432"
 )
 
 cursor = connect.cursor()
+cursor.execute("SELECT version();")
+print(str(cursor.fetchone()))
