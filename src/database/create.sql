@@ -1,6 +1,6 @@
 CREATE TABLE users (
     users_id SERIAL PRIMARY KEY,
-    telegram_id INT,
+    telegram_id VARCHAR(32) UNIQUE,--INT VERCHAR()fwf
     username VARCHAR(100) NOT NULL
 );
 
@@ -15,6 +15,7 @@ CREATE TABLE games (
 
 CREATE TABLE group_users (
     group_id SERIAL PRIMARY KEY,
+    telegram_group_id VARCHAR(32) UNIQUE,
     name VARCHAR(100) NOT NULL
 );
 
