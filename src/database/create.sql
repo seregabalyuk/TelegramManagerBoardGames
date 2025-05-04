@@ -28,7 +28,7 @@ CREATE TABLE shops(
 CREATE TABLE group_member (
     group_id INT REFERENCES group_users(group_id) ON DELETE CASCADE ON UPDATE CASCADE,
     users_id INT REFERENCES users(users_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    title VARCHAR(100) NOT NULL,
+--    title VARCHAR(100) NOT NULL,
     PRIMARY KEY (group_id, users_id)
 );
 
