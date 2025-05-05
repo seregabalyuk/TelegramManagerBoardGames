@@ -42,7 +42,7 @@ async def join_to_grouph(user: types.user, chat_id: int) :
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.DEBUG)#.INFO .ERROR
 # Объект бота
-token = open('token.txt').read().strip()
+token = open('src/token.txt').read().strip()
 bot = Bot(token=token)
 # Диспетчер
 dp = Dispatcher()
