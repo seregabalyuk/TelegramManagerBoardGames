@@ -2,12 +2,11 @@ import psycopg2
 
 connect = psycopg2.connect(
 dbname="board_game_database",
-user="board_game_bot",
-password="bot",
+user="postgres",
+password="12345678",
 host="localhost",
 port="5432"
 )
 
 cursor = connect.cursor()
-cursor.execute("SELECT version();")
-print(str(cursor.fetchone()))
+cursor.execute("INSERT INTO users (telegram_id, username) VALUES (%s, %s);", ("chl*n", "h*i"))пдпцыц61кф67
