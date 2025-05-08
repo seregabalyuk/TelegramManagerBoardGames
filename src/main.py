@@ -1,12 +1,19 @@
-import psycopg2
+from aiogram import Bot, Dispatcher
+from aiogram.enums import ParseMode
+import asyncio
 
-connect = psycopg2.connect(
-dbname="board_game_database",
-user="postgres",
-password="12345678",
-host="localhost",
-port="5432"
-)
+from handlers import start, groups
 
-cursor = connect.cursor()
-cursor.execute("INSERT INTO users (telegram_id, username) VALUES (%s, %s);", ("chl*n", "h*i"))
+
+token = open('src/token.txt').read().strip()
+bot = Bot(token=token)
+dp = Dispatcher()
+dp.include_router(start.router)
+dp.include_router(groups.router)
+
+async def main():
+  await dp.start_polling(bot)
+
+if __name__ == "__main__":
+  asyncio.run(main())
+
