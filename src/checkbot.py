@@ -8,8 +8,6 @@ from aiogram.filters.chat_member_updated import ChatMemberUpdatedFilter, IS_NOT_
 from psycopg2 import Error, sql
 
 ERROR_MSG = "bruh, "
-
-
 def get_connect() :
     return psycopg2.connect(dbname="board_game_database", user="board_game_bot", password="bot", port="5432", host="localhost")
 
@@ -51,7 +49,7 @@ class UsersRel(object) : #сдфыы  users_rel  usersRel  UsrersRel
 async def register(user: types.user) :
     connect = get_connect()
     try :
-        connect.cursor().execute("INSERT INTO users (telegram_id, username) VALUES (%s, %s)", (str(user.id), str(user.username)))
+        connect.cursor().execute("INSERT INTO users (telegram_id, username) VALUES (%s, %s);", (str(user.id), str(user.username)))
         connect.commit()
         return "You are registred"
     except Error as e :
@@ -62,7 +60,6 @@ async def register(user: types.user) :
 async def join_to_grouph(user: types.user, chat_id: int) :
 #\
     connect = get_connect()
-    #UsersRel.select
     cursor = connect.cursor()
     cursor.execute("SELECT users_id FROM users WHERE telegram_id = %s", (str(user.id), ))
     user_row = cursor.fetchone()#[0] id_row ..
@@ -111,7 +108,7 @@ async def bot_added_as_member(event: types.ChatMemberUpdated) :
         connect.cursor().execute("INSERT INTO group_users (telegram_group_id, name) VALUES (%s, %s);", (str(chat.id), str(chat.title)))#teke
         connect.commit()
         await event.answer("group registerd")
-    except Error as e :
+    except Error as e:
         await event.answer(ERROR_MSG + "group")
     kb = [[types.KeyboardButton(text="join"), types.KeyboardButton(text="deny")]]
     keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
@@ -193,17 +190,22 @@ async def cmd_lease(message: types.Message, command: CommandObject) :
             if (game_row is None or fromuser_row is None or touser_row is None) :
                 answer = ERROR_MSG + "game is " + str(game_row) + ", owner is " + str(fromuser_row) + ", target user is " + str(touser_row)
             else :
-                cursor.execute("SELECT * FROM gameboards WHERE users_id = %s AND games_id = %s", (str(fromuser_row[0]), str(game_row[0])))
-                if cursor.fetchone() is None :
+
+                cursor.execute("SELECT (owner_user_id) FROM gameboards WHERE users_id = %s AND games_id = %s", (str(fromuser_row[0]), str(game_row[0])))
+                current_owner = cursor.fetchone()
+                if current_owner is None :
                     answer = str(game_row[0]) +  " isnt " + str(fromuser_row[0]) + "'s game  found"
                 else :
-                    try :
-                        cursor.execute("UPDATE gameboards SET owner_user_id = %s WHERE users_id = %s AND games_id = %s",
-                                       (str(touser_row[0]), str(fromuser_row[0]), str(game_row[0])))
-                        connect.commit()
-                        answer = "game leased"
-                    except Error as e :
-                        answer = ERROR_MSG + str(e.pgerror)
+                    if current_owner[0] == fromuser_row:
+                        try :
+                            cursor.execute("UPDATE gameboards SET owner_user_id = %s WHERE users_id = %s AND games_id = %s",
+                                        (str(touser_row[0]), str(fromuser_row[0]), str(game_row[0])))
+                            connect.commit()
+                            answer = "game leased"
+                        except Error as e :
+                            answer = ERROR_MSG + str(e.pgerror)
+                    else :
+                        answer = ERROR_MSG + "according to database game is leased"
     await message.answer(answer)
 
 
