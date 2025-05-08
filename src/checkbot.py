@@ -8,8 +8,46 @@ from aiogram.filters.chat_member_updated import ChatMemberUpdatedFilter, IS_NOT_
 from psycopg2 import Error, sql
 
 ERROR_MSG = "bruh, "
+
+
 def get_connect() :
     return psycopg2.connect(dbname="board_game_database", user="board_game_bot", password="bot", port="5432", host="localhost")
+
+
+class UsersRel(object) : #сдфыы  users_rel  usersRel  UsrersRel
+
+    def __init__(self, idd, telegram_id, username) :
+        self.id = idd
+        self.telegram_id = telegram_id
+        self.username = username
+
+    def insert(self, telegram_id, username):# insi
+        coonect = get_connect()
+        #answer
+        try :# cetch
+            coonect.cursor().execute("INSERT INTO users (telegram_id, username) VALUES (%s, %s)", (str(telegram_id), str(username)))
+            coonect.commit()#.v
+            return "ok"# "in"
+        except Error as e :
+            return str(e.pgerror)#.
+
+    def select(self, username=None, telegram_id=None): #
+        connect = get_connect()#connact , telegram_id
+        query = "SELECT * FROM users WHERE" # EHERE
+        param = ()#,
+        cursor = connect.cursor()
+        if username is None and telegram_id is not None : # Nane
+            query = query + " telegram_id = %s"#connect.cursor().execute("SELECT (users_id) FROM users WHERE telegram_id = %s")# EHERE
+            param = (str(telegram_id), )
+        if username is not None and telegram_id is None : # telegtam_id
+            query = query + "username = %s"#connect.cursor()
+            param = (str(username), )
+        cursor.execute(query, param)
+        result = cursor.fetchone()
+        return UsersRel(result[0], result[1], result[2])
+    staticmethod(insert)#inde indert eer3rre
+    staticmethod(select)
+
 async def register(user: types.user) :
     connect = get_connect()
     try :
@@ -24,6 +62,7 @@ async def register(user: types.user) :
 async def join_to_grouph(user: types.user, chat_id: int) :
 #\
     connect = get_connect()
+    #UsersRel.select
     cursor = connect.cursor()
     cursor.execute("SELECT users_id FROM users WHERE telegram_id = %s", (str(user.id), ))
     user_row = cursor.fetchone()#[0] id_row ..
@@ -66,6 +105,7 @@ async def cmd_register(message: types.Message) :
 @router.my_chat_member(ChatMemberUpdatedFilter(member_status_changed=JOIN_TRANSITION))
 async def bot_added_as_member(event: types.ChatMemberUpdated) :
     connect = get_connect()
+    #UsersRel.insert()
     try :
         chat = event.chat
         connect.cursor().execute("INSERT INTO group_users (telegram_group_id, name) VALUES (%s, %s);", (str(chat.id), str(chat.title)))#teke
