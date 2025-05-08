@@ -16,7 +16,8 @@ CREATE TABLE games (
 CREATE TABLE group_users (
     id SERIAL PRIMARY KEY,
     telegram_group_id BIGINT UNIQUE,
-    title VARCHAR(100) NOT NULL
+    title VARCHAR(100) NOT NULL,
+    password INT
 );
 
 CREATE TABLE shops(
@@ -28,7 +29,6 @@ CREATE TABLE shops(
 CREATE TABLE group_member (
     group_id INT REFERENCES group_users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     user_id INT REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
---    title VARCHAR(100) NOT NULL,
     PRIMARY KEY (group_id, user_id)
 );
 

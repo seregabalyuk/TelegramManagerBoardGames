@@ -42,7 +42,7 @@ def load(telegram_id: int):
   )
 
 
-def get(telegram_id: int, name: str):
+def get(telegram_id: int, name: str, registreted=False):
   select_query = """
   SELECT id, name
   FROM users 
@@ -55,8 +55,9 @@ def get(telegram_id: int, name: str):
   cursor.execute(select_query,(telegram_id, ))
   result = cursor.fetchone()
   if result:
+    registreted = False
     return User(result[0], telegram_id, result[1])
   else:
+    registreted = True
     return register(telegram_id, name)
-
 
