@@ -43,8 +43,77 @@ class UsersRel(object) : #сдфыы  users_rel  usersRel  UsrersRel
         cursor.execute(query, param)
         result = cursor.fetchone()
         return UsersRel(result[0], result[1], result[2])
+
     staticmethod(insert)#inde indert eer3rre
     staticmethod(select)
+
+
+def insert(users_id, games_id, if_bought, if_free, current_owner):#, if_biught
+    connect = get_connect()
+    try :
+        connect.cursor().execute("INSERT INTO gameboards (users_id, games_id, if_bought, if_free, current_owner) VALUES (%s, %s, %s, %s, %s)", (str(users_id), str(games_id), if_bought, if_free, str(current_owner)))#"insert"
+        connect.commit()
+        return "ok"
+    except Error as e :
+        return str(e.pgerror)
+
+
+class UsersGamesRel(object) :
+    def __init__(self, users_id, games_id, if_bought, if_free, current_owner):#, is+ , is_bought, is_free
+        self.user_id = users_id
+        self.game_id = games_id
+        self.is_bought = if_bought
+        self.is_free = if_free
+        self.current_owner = current_owner
+
+    def select(self, is_wishlisted, is_free, of_what, id):#NOne, group=None , user=None, friends_of=None
+        query = "SELECT * FROM gameboards WHERE"#. .
+        params = ()#,
+        if is_wishlisted :
+            query = query + " if_bought = false"#aue
+        else :
+            query = query + " if_bought = true"
+            if is_free : #. .
+                query = query + " AND users_id = owner_user_id"
+        query_end = ""
+        if of_what == "user" :
+            query_end = " AND users_id = %s"
+            params = (str(id),)
+        if of_what == "group" :
+            query_end = " AND users_id IN (SELECT users_id FROM group_member WHERE group_id = %s)"
+            params = (str(id), )
+        if of_what == "friends" :
+            query_end = " AND users_id IN (SELECT users_id FROM group_member WHERE group_id IN (SELECT group_id FROM group_member))"# " And"  =  WHERE
+            params
+
+        connect = get_connect()
+        cursor = connect.cursor()#connectt
+        cursor.execute(query + query_end, params)
+        query_result = cursor.fetchall()
+        result = []
+        for rel in query_result :
+            result.append(UsersGamesRel(rel[0], rel[1], rel[2], rel[3], rel[4]))
+        return result
+    staticmethod(insert)#ma -
+    staticmethod(select)
+
+
+
+class GameRel(object) : #XXXXXXXXXxxxx
+    def __init__(self, idd, name, min_players, max_players, playing_time, complexity):#, playomg
+        self.id =idd#seld
+        self.name = name
+        self.min_players = min_players
+        self.max_players = max_players
+        self.playing_time = playing_time
+        self.complexity = complexity
+    def select(self, title):
+        connect = get_connect()
+        cursor = connect.cursor()
+        cursor.execute("SELECT * FROM games WHERE games_name = %s", (str(title, )))# games_names
+        res = cursor.fetchone()#query_result
+        return GameRel(res[0], res[1], res[2], res[3], res[4], res[5])#. res[5]
+
 
 async def register(user: types.user) :
     connect = get_connect()
