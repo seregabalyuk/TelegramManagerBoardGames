@@ -12,6 +12,7 @@ router = Router()
 @router.my_chat_member(ChatMemberUpdatedFilter(JOIN_TRANSITION))
 async def bot_added_to_chat(event: types.ChatMemberUpdated):
   chat = event.chat
+  group = None
   try:
     group = Group.create(chat.id, chat.title)
     print(f"bot add to chat id={chat.id} title={chat.title}")
