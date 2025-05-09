@@ -5,18 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b451c66-b16e-4461-ae67-62328b482754" name="Changes" comment="Добавлено:&#10;orm для таблицы gameboards, games">
-      <change afterPath="$PROJECT_DIR$/description/Classes.drawio" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/description/Classes.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ConfigReader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tasks/task.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/checkbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/checkbot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/checkdata.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/checkdata.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/token.txt" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/database/Boardgame.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/handlers/search_game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_05_2025_9_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_05_2025_9_39__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/connect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handlers/groups.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/groups.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <favorite-branches>
@@ -55,20 +62,22 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2wJaTSaa48ri2ebSIqEAAAxVnHr" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.checkbot.executor&quot;: &quot;Run&quot;,
-    &quot;Python.checkdata.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;devv&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.checkbot.executor": "Run",
+    "Python.checkdata.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "serega__dev",
+    "settings.editor.selected.configurable": "terminal"
   }
-}</component>
-  <component name="RunManager" selected="Python.checkbot">
+}]]></component>
+  <component name="RunManager" selected="Python.main">
     <configuration name="checkbot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TelegramManagerBoardGames" />
       <option name="ENV_FILES" value="" />
@@ -113,6 +122,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TelegramManagerBoardGames" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="" />
       <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
@@ -130,6 +161,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.checkbot" />
         <item itemvalue="Python.checkdata" />
       </list>
