@@ -37,9 +37,8 @@ CREATE TABLE boardgames (
     owner_user_id INT REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     type_boardgame_id INT REFERENCES types_boardgames(id) ON DELETE CASCADE ON UPDATE CASCADE,
 
-    took_user_id INT NULL REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    is_bought BOOLEAN DEFAULT false,
-    is_free BOOLEAN DEFAULT false
+    took_user_id INT NULL DEFAULT NULL REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    is_bought BOOLEAN DEFAULT false
 );
 
 CREATE TABLE product (

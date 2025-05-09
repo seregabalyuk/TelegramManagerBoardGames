@@ -6,6 +6,26 @@ class User:
     self.telegram_id = telegram_id
     self.name = name
 
+  def add_boardgame(self, type_boardgame_id: int, is_bought: bool):
+    try:
+      insert_query = """
+      INSERT INTO boardgames (
+        owner_user_id, 
+        type_boardgame_id,
+        is_bought
+      )
+      VALUES (%s, %s, %s);
+      """
+      connect = data.connect()
+      cursor = connect.cursor()
+
+      cursor.execute(insert_query,(self.id, type_boardgame_id, is_bought, ))
+      connect.commit()
+      return True
+    except:
+      return False
+
+
 
 
 def register(telegram_id: int, name: str):
