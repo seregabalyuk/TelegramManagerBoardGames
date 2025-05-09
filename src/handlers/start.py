@@ -1,7 +1,6 @@
 from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.enums import ParseMode
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from database import User, Group
 
@@ -47,10 +46,10 @@ async def cmd_start(message: types.Message):
       try:
         group = Group.load(group_id, password)
         if group.contain(user):
-          answer += "\n" + f"Вы уже состоите в {group.title}\\!"
+          answer += "\n" + f"Вы уже состоите в {group.name}\\!"
         else:
           group.add(user)
-          answer += "\n" + f"Вы присоединились к {group.title}\\!"
+          answer += "\n" + f"Вы присоединились к {group.name}\\!"
       except Exception as error:
         print ("cannot load group. with error:" + repr(error))
         answer += "\n" + f"Я не смог добавить вас в группу\\."

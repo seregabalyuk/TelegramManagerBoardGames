@@ -1,16 +1,20 @@
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.types import BotCommand
+from aiogram.fsm.storage.memory import MemoryStorage
 import asyncio
 
-from handlers import start, groups
+from handlers import start, groups, add
 
 
 token = open('src/token.txt').read().strip()
+storage = MemoryStorage()
 bot = Bot(token=token)
-dp = Dispatcher()
+dp = Dispatcher(storage=storage)
 dp.include_router(start.router)
 dp.include_router(groups.router)
+dp.include_router(add.router)
+
 
 
 async def set_bot_commands(bot: Bot):
