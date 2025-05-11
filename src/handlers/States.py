@@ -10,4 +10,7 @@ class States(StatesGroup):
   # для search
   found_search_game = State()
   chose_show_all_search = State()
+  # для ask 
+  asked_boardgame = State()
+  
   
