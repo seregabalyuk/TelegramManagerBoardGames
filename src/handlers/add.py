@@ -23,10 +23,13 @@ async def choose_place(callback: types.CallbackQuery, state: FSMContext):
   data = callback.data
   if data == "not found":
     await state.clear()
+    await state.set_state(None)
     await callback.message.edit_text("""
     Для повторной попытки поиска нажмите /add\nМожете ввести лишь часть названия.
     """)
   else:
+    user = User.get(callback.from_user.id, callback.from_user.username)
+    game = user.check_game()
     args = data.split()
     buttons = InlineKeyboardMarkup(
       inline_keyboard=[
@@ -59,5 +62,6 @@ async def finish(callback: types.CallbackQuery, state: FSMContext):
       await callback.message.edit_text(f"""Вы успешно добавили {args[1]} в {place}""")
     else:
       await callback.message.edit_text(f"""Я не смог добавить {args[1]} в {place}. Ошибка в базе данных.""")
-  await state.reset_state(with_data=True)
+  await state.clear()
+  await state.set_state(None)
 

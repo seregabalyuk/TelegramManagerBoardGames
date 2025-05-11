@@ -21,6 +21,7 @@ def get_buttons_with_info(game_info, data) :
   else :
     if not game_info[1] :
       buttons.append([InlineKeyboardButton(text="add to my games(already bought)", callback_data=data + " add")])
+  buttons.append([InlineKeyboardButton(text="попросить", callback_data=data + " add")])
   return buttons
 
 
@@ -38,8 +39,8 @@ async def selected_callback(callback: types.CallbackQuery, state: FSMContext ) :
     answer = ""
     markup = None
     if data == "not found" :
-       if data == "not found":
         await state.clear()
+        await state.set_state(None)
         await callback.message.edit_text("""
         Для повторной попытки поиска нажмите /add\nМожете ввести лишь часть названия.
         """)

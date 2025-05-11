@@ -1,6 +1,9 @@
 import database.connect as data
 import random
 
+from  database import User
+
+
 class Group:
   def __init__(self, id, telegram_id, name, password):
     self.id = id
@@ -50,7 +53,39 @@ class Group:
 
     cursor.execute(select_query,(self.id, user.id))
     return cursor.fetchone()[0]
-    
+  
+  def all_users(self):
+    select_query = """
+    SELECT id, telegram_id, name
+    FROM groups_members 
+    WHERE group_id = %s
+    """
+    connect = data.connect()
+    cursor = connect.cursor()
+
+    cursor.execute(select_query,(self.id,))
+    answer = []
+    for string in cursor.fetchall():
+      answer.append(int(string[0]), int(string[1]), string[2])
+    return answer
+
+  def all_gameboards(self):
+    select_query = """
+    SELECT bg.id, tbg.name, u.name
+    FROM boardgames bg
+    JOIN types_boardgames tbg ON bg.type_boardgame_id = tbg.id
+    JOIN users u ON bg.owner_user_id = u.id
+    JOIN groups_members gm ON u.id = gm.user_id
+    JOIN groups g ON gm.group_id = g.id
+    WHERE g.id = %s AND bg.is_bought = TRUE AND bg.took_user_id IS NULL;
+    """
+    connect = data.connect()
+    cursor = connect.cursor()
+
+    cursor.execute(select_query,(self.id,))
+    return cursor.fetchall()
+      
+
 
 
 def create(telegram_id: int, name: str):
@@ -102,3 +137,21 @@ def load(group_id: int, password: int):
     password
   )
 
+
+def load_without_password(telegram_id: int):
+  select_query = """
+  SELECT id, name, password
+  FROM groups 
+  WHERE telegram_id = %s
+  """
+  
+  connect = data.connect()
+  cursor = connect.cursor()
+  cursor.execute(select_query,(telegram_id, ))
+  result = cursor.fetchone()
+  return Group(
+    int(result[0]),
+    telegram_id,
+    result[1],
+    int(result[2])
+  )
