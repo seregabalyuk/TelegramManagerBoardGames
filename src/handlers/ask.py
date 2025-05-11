@@ -35,6 +35,7 @@ async def ask(from_user, to_user, game_id, game_name):
     text = f"У тебя попросил {game_name} пользователь с именем {from_user.name}",
     reply_markup=buttons
   )
+  return True
 
 
 @router.callback_query(StateFilter(States.get_answer_ask))
@@ -45,7 +46,9 @@ async def get_answer(callback: types.CallbackQuery, state: FSMContext):
     return
   from_user = User.load_by_id(int(args[1]))
   to_user = User.load(callback.from_user.id)
-  game_name = GameBoard.load_name_by_id(int(args[2]))
+  game_id = int(args[2])
+  game_name = GameBoard.load_name_by_id(game_id)
+  is_give = False
   if args[0] == "not_give":
     await state.clear()
     await state.set_state(None)
@@ -53,5 +56,22 @@ async def get_answer(callback: types.CallbackQuery, state: FSMContext):
   elif args[0] == "give":
     await state.clear()
     await state.set_state(None)
-    await callback.message.edit_text(f"""Вы дали игру {game_name} пользователю {from_user.name}""")
+    try:
+      if to_user.give_game(game_id, from_user):
+        await callback.message.edit_text(f"""Вы дали игру {game_name} пользователю {from_user.name}""")
+        is_give = True
+      else:
+        await callback.message.edit_text(f"""Вы уже дали кому-то игру {game_name}""")
+    except:
+      await callback.message.edit_text(f"""ошибка в базе данных""")
+  if is_give:
+    await bl.bot.send_message(
+      chat_id = from_user.telegram_id,
+      text = f"{to_user.name} дал тебе {game_name}"
+    )
+  else:
+    await bl.bot.send_message(
+      chat_id = from_user.telegram_id,
+      text = f"{to_user.name} не смог дать тебе {game_name}"
+    )
   

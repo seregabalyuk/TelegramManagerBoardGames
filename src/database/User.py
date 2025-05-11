@@ -47,6 +47,25 @@ class User:
       cursor.execute("WITH with_game AS (SELECT owner_user_id, took_user_id, is_bought FROM boardgames WHERE type_boardgame_id = %s) SELECT users.id, took_user_id, is_bought, users.name, groups.name, users.telegram_id FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id JOIN with_game ON with_game.owner_user_id = user_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(with_game_id), int(self.id)))
     return cursor.fetchall()
 
+  def give_game(self, game_id:int, user_other):
+    update_query = """
+    WITH updated AS (
+      UPDATE boardgames
+      SET took_user_id = %s
+      WHERE id = %s AND took_user_id IS NULL
+      RETURNING 1
+    )
+    SELECT EXISTS (SELECT 1 FROM updated) AS success;
+    """
+    connect = data.connect()
+    cursor = connect.cursor()
+
+    cursor.execute(update_query,(user_other.id, game_id, ))
+    can = cursor.fetchone()[0]
+    connect.commit()
+    return can
+
+
   def __str__(self):
     return str(self.id) + " " + str(self.telegram_id) + " " + self.name
   

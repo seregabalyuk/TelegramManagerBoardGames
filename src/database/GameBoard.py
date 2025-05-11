@@ -34,6 +34,7 @@ def load_name_by_id(id: int):
   cursor.execute(find_query,(id, ))
   answer = cursor.fetchone()
   return answer[0]
+  
 
 def find(name: str):
   find_query = """
