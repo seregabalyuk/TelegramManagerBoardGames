@@ -3,7 +3,7 @@ from aiogram.filters import ChatMemberUpdatedFilter, JOIN_TRANSITION, LEAVE_TRAN
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.enums import ParseMode
 
-from src.database import Group
+from database import Group
 
 
 router = Router()

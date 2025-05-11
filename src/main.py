@@ -4,18 +4,25 @@ from aiogram.types import BotCommand
 from aiogram.fsm.storage.memory import MemoryStorage
 import asyncio
 
-from handlers import start, groups, add, search_game
+from handlers import (
+  start, 
+  groups, 
+  add, 
+  search,
+  find
+)
+import token_loader
 
 
-token = open('token.txt').read().strip()#src/
+token = token_loader.load()
 storage = MemoryStorage()
 bot = Bot(token=token)
 dp = Dispatcher(storage=storage)
 dp.include_router(start.router)
 dp.include_router(groups.router)
 dp.include_router(add.router)
-dp.include_router(search_game.router)
-
+dp.include_router(search.router)
+dp.include_router(find.router)
 
 
 async def set_bot_commands(bot: Bot):

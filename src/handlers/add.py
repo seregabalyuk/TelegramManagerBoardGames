@@ -6,45 +6,20 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from database import GameBoard, User
+from handlers.States import States
 
 router = Router()
 
-class Add(StatesGroup):
-  started = State()
-  finded = State()
-  selected = State()
-
-
 
 @router.message(Command("add"))
-async def add_step1(message: types.Message, state: FSMContext):
-  await state.set_state(Add.started)
+async def catcher(message: types.Message, state: FSMContext):
+  await state.update_data(command="add")
+  await state.set_state(States.wrote_find_text)
   await message.answer("Напишите название настольной игры")
 
 
-def create_buttons(boardgames):
-  buttons = []
-  for (id, name) in boardgames:
-    buttons.append([InlineKeyboardButton(text=name, callback_data=f"{id} {name}")])
-  buttons.append([InlineKeyboardButton(text="нет нужной игры", callback_data=f"not found")])
-  return InlineKeyboardMarkup(inline_keyboard=buttons)
-
-
-@router.message(Add.started)
-async def add_step2(message: types.Message, state: FSMContext):
-  boardgame_name = message.text
-  boardgames = GameBoard.find(boardgame_name)
-  if len(boardgames) == 0:
-    await state.clear()
-    await message.answer(f"Я не нашёл {boardgame_name}. Попробуйте еще раз /add")
-  else:
-    buttons = create_buttons(boardgames)
-    await state.set_state(Add.finded)
-    await message.answer(f"Вот игры, которые я нашёл:", reply_markup=buttons)
-
-
-@router.callback_query(StateFilter(Add.finded))
-async def add_step3(callback: types.CallbackQuery, state: FSMContext):
+@router.callback_query(StateFilter(States.found_add_game))
+async def choose_place(callback: types.CallbackQuery, state: FSMContext):
   data = callback.data
   if data == "not found":
     await state.clear()
@@ -64,16 +39,15 @@ async def add_step3(callback: types.CallbackQuery, state: FSMContext):
         ]
       ]
     )
-    await state.set_state(Add.selected)
+    await state.set_state(States.chose_place_add)
     await callback.message.edit_text(f"""Добавить {args[1]} в:""", reply_markup=buttons)
     # await callback.answer(f"вы выбрали настольную игру с id = {id}")
 
 
-@router.callback_query(StateFilter(Add.selected))
-async def add_step3(callback: types.CallbackQuery, state: FSMContext):
+@router.callback_query(StateFilter(States.chose_place_add))
+async def finish(callback: types.CallbackQuery, state: FSMContext):
   data = callback.data
   if data == "closed":
-    await state.clear()
     await callback.message.edit_text("""
     Можете попробовать ещё раз /add
     """)
@@ -85,7 +59,5 @@ async def add_step3(callback: types.CallbackQuery, state: FSMContext):
       await callback.message.edit_text(f"""Вы успешно добавили {args[1]} в {place}""")
     else:
       await callback.message.edit_text(f"""Я не смог добавить {args[1]} в {place}. Ошибка в базе данных.""")
+  await state.reset_state(with_data=True)
 
-  
-  
-  
