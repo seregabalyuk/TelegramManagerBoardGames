@@ -23,12 +23,18 @@ def pattern_search(pattern: str):#self, .
     connect = data.connect()
     cursor = connect.cursor()
     query = sql.SQL("SELECT * FROM games WHERE games_name LIKE {pattern};").format(
-        pattern=sql.Literal(("%" + pattern + "%")))# str(command.args))  games_name
+        pattern=sql.Literal(("%" + pattern + "%")))
     cursor.execute(query)
-    query_result = cursor.fetchall()#(9())((((()))))
+    query_result = cursor.fetchall()
     result = []
     for game in query_result : # rel i
         result.append(Boardgame(game[0], game[1], game[2], game[3], game[4], game[5]))
     return result
     #staticmethod(load)
     #staticmethod(pattern_search)#patterb
+
+def return_game(id: int) :
+    connect = data.connect()
+    cursor = connect.cursor()
+    #try :
+    #    cursor.execute("UPDATE ")

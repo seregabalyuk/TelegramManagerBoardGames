@@ -41,12 +41,17 @@ class User:
     connect = data.connect()
     cursor = connect.cursor()
     if with_game_id is None :
-      cursor.execute("SELECT users.name, groups.name FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(self.id), ))
+      cursor.execute("SELECT users.name, groups.name, users.telegram_id FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(self.id), ))
 
     else :
-      cursor.execute("WITH with_game AS (SELECT owner_user_id, took_user_id, is_bought FROM boardgames WHERE type_boardgame_id = %s) SELECT users.id, took_user_id, is_bought, users.name, groups.name FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id JOIN with_game ON with_game.owner_user_id = user_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(with_game_id), int(self.id)))
+      cursor.execute("WITH with_game AS (SELECT owner_user_id, took_user_id, is_bought FROM boardgames WHERE type_boardgame_id = %s) SELECT users.id, took_user_id, is_bought, users.name, groups.name, users.telegram_id FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id JOIN with_game ON with_game.owner_user_id = user_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(with_game_id), int(self.id)))
     return cursor.fetchall()
 
+  def get_leased_games(self):
+    connect = data.connect()
+    cursor = connect.cursor()
+    cursor.execute("SELECT users.name, users.telegram_id, types_boardgames.name, boardgames.id FROM boardgames JOIN users ON users.id = owner_user_id JOIN types_boardgames ON types_boardgames.id = type_boardgame_id WHERE took_user_id = %s;", (self.id, ))
+    return cursor.fetchall()
 
 def register(telegram_id: int, name: str):
   insert_query = """

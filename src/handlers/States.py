@@ -12,6 +12,11 @@ class States(StatesGroup):
   chose_show_all_search = State()
   # для view
   open_view_games = State()
+  #for ask
+  ask_to_users = State()
+  #for return
+  leased_shown = State()
+  #
   
 
   

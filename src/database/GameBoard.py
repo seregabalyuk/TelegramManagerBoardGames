@@ -1,4 +1,5 @@
 import database.connect as data
+from psycopg2 import Error
 
 
 class GameBoard : #()
@@ -38,3 +39,13 @@ def find(name: str):
   answer = cursor.fetchall()
   return answer
 
+def return_game(id: int) :
+    connect = data.connect()
+    cursor = connect.cursor()
+    try :
+        cursor.execute("UPDATE boardgames SET took_user_id = NULL WHERE id = %s ;", (id, ))#
+        connect.commit()
+        return True
+    except Error as e :
+        print(e.pgerror)
+        return False

@@ -4,15 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b451c66-b16e-4461-ae67-62328b482754" name="Changes" comment="Добавлено:&#10;orm для таблицы gameboards, games">
-      <change afterPath="$PROJECT_DIR$/src/handlers/search.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_05_2025_9_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_05_2025_9_39__Changes_.xml" afterDir="false" />
+    <list default="true" id="0b451c66-b16e-4461-ae67-62328b482754" name="Changes" comment="Добавлено:&#10;поиск игр вывод тех, у кого она есть, и вывод информации о игре">
+      <change afterPath="$PROJECT_DIR$/src/handlers/lease.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/handlers/return_game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bot_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/bot_loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/Boardgame.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/Boardgame.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/database/GameBoard.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/GameBoard.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/database/User.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/User.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/groups.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/groups.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/search_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/search_game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/connect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handlers/States.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/States.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handlers/ask.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/ask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handlers/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/search.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +45,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="serega_dev" />
+        <entry key="$PROJECT_DIR$" value="search_dev" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -68,16 +71,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.checkbot.executor&quot;: &quot;Run&quot;,
-    &quot;Python.checkdata.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;search__dev&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.checkbot.executor": "Run",
+    "Python.checkdata.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "return__dev",
+    "settings.editor.selected.configurable": "terminal"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.main">
     <configuration name="checkbot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TelegramManagerBoardGames" />
@@ -240,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746701156721</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Добавлено:&#10;поиск игр вывод тех, у кого она есть, и вывод информации о игре">
+      <option name="closed" value="true" />
+      <created>1746806721223</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746806721223</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -260,7 +271,8 @@
     <MESSAGE value="Добавлено:&#10;Регистрация пользователя в группе&#10;Поиск настольных игр&#10;Возможность добавить игру в свои&#10;Возможность поделится игрой&#10;Возможность вернуть игру" />
     <MESSAGE value="Добавлено:&#10;orm для таблицы users" />
     <MESSAGE value="Добавлено:&#10;orm для таблицы gameboards, games" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлено:&#10;orm для таблицы gameboards, games" />
+    <MESSAGE value="Добавлено:&#10;поиск игр вывод тех, у кого она есть, и вывод информации о игре" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлено:&#10;поиск игр вывод тех, у кого она есть, и вывод информации о игре" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
