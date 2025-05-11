@@ -86,7 +86,7 @@ class Group:
     out = cursor.fetchall()
     games = []
     for id, name, u_id, u_tg, u_name in out:
-      games.append((int(id),name, User.User(u_id, u_tg, u_name)))
+      games.append((int(id),name, User.User(int(u_id), int(u_tg), u_name)))
     return games
       
 

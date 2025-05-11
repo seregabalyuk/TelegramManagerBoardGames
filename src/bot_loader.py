@@ -9,7 +9,8 @@ from handlers import (
   add, 
   search,
   find,
-  view
+  view,
+  ask
 )
 import token_loader
 
@@ -24,6 +25,7 @@ dp.include_router(add.router)
 dp.include_router(search.router)
 dp.include_router(find.router)
 dp.include_router(view.router)
+dp.include_router(ask.router)
 
 
 async def set_bot_commands(bot: Bot):

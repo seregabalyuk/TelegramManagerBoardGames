@@ -11,7 +11,7 @@ router = Router()
 def create_buttons(boardgames):
   buttons = []
   for (id, name) in boardgames:
-    buttons.append([InlineKeyboardButton(text=name, callback_data=f"{id} {name}")])
+    buttons.append([InlineKeyboardButton(text=name, callback_data=f"{id}")])
   buttons.append([InlineKeyboardButton(text="нет нужной игры", callback_data=f"not found")])
   return InlineKeyboardMarkup(inline_keyboard=buttons)
 
@@ -22,7 +22,8 @@ async def give_chosen(message: types.Message, state: FSMContext):
   boardgames = GameBoard.find(boardgame_name)
   data = await state.get_data()
   if len(boardgames) == 0:
-    await state.reset_state(with_data=True)
+    await state.clear()
+    await state.set_state(None)
     await message.answer(f"Я не нашёл {boardgame_name}. Попробуйте еще раз /{command}")
   else:
     buttons = create_buttons(boardgames)

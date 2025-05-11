@@ -1,8 +1,6 @@
 from aiogram import Router, types
 from aiogram.filters import Command, StateFilter
-from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from database import User, Group
@@ -52,10 +50,10 @@ async def button_touch(callback: types.CallbackQuery, state: FSMContext):
     """)
   else:
     args = data.split()
-    to_user = User.User(int(args[2]), int(args[3]), args[2])
+    to_user = User.User(int(args[2]), int(args[3]), args[4])
     game_id = int(args[0])
     game_name = args[1]
     await ask.ask(from_user, to_user, game_id, game_name)
-    await callback.message.answer(f"""{from_user.name} попросил {game_name} у {to_user}""")
+    await callback.message.answer(f"""{from_user.name} попросил {game_name} у {to_user.name}""")
 
 

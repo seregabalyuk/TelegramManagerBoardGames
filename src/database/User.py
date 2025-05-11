@@ -44,9 +44,14 @@ class User:
       cursor.execute("SELECT users.name, groups.name FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(self.id), ))
 
     else :
-      cursor.execute("WITH with_game AS (SELECT owner_user_id, took_user_id, is_bought FROM boardgames WHERE type_boardgame_id = %s) SELECT users.id, took_user_id, is_bought, users.name, groups.name FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id JOIN with_game ON with_game.owner_user_id = user_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(with_game_id), int(self.id)))
+      cursor.execute("WITH with_game AS (SELECT owner_user_id, took_user_id, is_bought FROM boardgames WHERE type_boardgame_id = %s) SELECT users.id, took_user_id, is_bought, users.name, groups.name, users.telegram_id FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id JOIN with_game ON with_game.owner_user_id = user_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(with_game_id), int(self.id)))
     return cursor.fetchall()
 
+  def __str__(self):
+    return str(self.id) + " " + str(self.telegram_id) + " " + self.name
+  
+  def __repr__(self):
+    return self.id.__repr__() + " " + self.telegram_id.__repr__() + " " + self.name
 
 def register(telegram_id: int, name: str):
   insert_query = """
@@ -103,3 +108,22 @@ def get(telegram_id: int, name: str, registreted=False):
     registreted = True
     return register(telegram_id, name)
 
+
+def load_by_id(id:int):
+  select_query = """
+  SELECT telegram_id, name
+  FROM users 
+  WHERE id = %s
+  """
+
+  connect = data.connect()
+  cursor = connect.cursor()
+
+  cursor.execute(select_query,(id, ))
+  res = cursor.fetchone()
+
+  return User(
+    id,
+    int(res[0]), 
+    res[1]
+  )

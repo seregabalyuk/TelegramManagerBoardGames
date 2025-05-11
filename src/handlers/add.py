@@ -28,9 +28,9 @@ async def choose_place(callback: types.CallbackQuery, state: FSMContext):
     Для повторной попытки поиска нажмите /add\nМожете ввести лишь часть названия.
     """)
   else:
-    user = User.get(callback.from_user.id, callback.from_user.username)
-    game = user.check_game()
     args = data.split()
+    user = User.get(callback.from_user.id, callback.from_user.username)
+    game = GameBoard.load(int(args[0]))
     buttons = InlineKeyboardMarkup(
       inline_keyboard=[
         [
@@ -43,8 +43,7 @@ async def choose_place(callback: types.CallbackQuery, state: FSMContext):
       ]
     )
     await state.set_state(States.chose_place_add)
-    await callback.message.edit_text(f"""Добавить {args[1]} в:""", reply_markup=buttons)
-    # await callback.answer(f"вы выбрали настольную игру с id = {id}")
+    await callback.message.edit_text(f"""Добавить {game.name} в:""", reply_markup=buttons)
 
 
 @router.callback_query(StateFilter(States.chose_place_add))
@@ -56,12 +55,13 @@ async def finish(callback: types.CallbackQuery, state: FSMContext):
     """)
   else:
     args = data.split()
-    place = "свою коллекцию" if args[2] == "collection" else "вишлист"
+    place = "свою коллекцию" if args[1] == "collection" else "вишлист"
     user = User.get(callback.from_user.id, callback.from_user.username)
-    if user.add_boardgame(int(args[0]), args[2] == "collection"):
-      await callback.message.edit_text(f"""Вы успешно добавили {args[1]} в {place}""")
+    game = GameBoard.load(int(args[0]))
+    if user.add_boardgame(int(args[0]), args[1] == "collection"):
+      await callback.message.edit_text(f"""Вы успешно добавили {game.name} в {place}""")
     else:
-      await callback.message.edit_text(f"""Я не смог добавить {args[1]} в {place}. Ошибка в базе данных.""")
+      await callback.message.edit_text(f"""Я не смог добавить {game.name} в {place}. Ошибка в базе данных.""")
   await state.clear()
   await state.set_state(None)
 

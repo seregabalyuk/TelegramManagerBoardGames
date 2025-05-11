@@ -21,6 +21,19 @@ def load(id: int):
     #print(res)
     return GameBoard(id, res[1], res[2], res[3], res[4], res[5])
 
+def load_name_by_id(id: int):
+  find_query = """
+  SELECT tbg.name
+  FROM boardgames bg
+  JOIN types_boardgames tbg ON bg.type_boardgame_id = tbg.id
+  WHERE bg.id = %s;
+  """
+  connect = data.connect()
+  cursor = connect.cursor()
+
+  cursor.execute(find_query,(id, ))
+  answer = cursor.fetchone()
+  return answer[0]
 
 def find(name: str):
   find_query = """
