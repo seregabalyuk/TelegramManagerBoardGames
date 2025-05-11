@@ -7,6 +7,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from database import User, Group
 from handlers.States import States
+from handlers import ask
 
 router = Router()
 
@@ -15,8 +16,8 @@ def create_buttons(gameboards):
   for (id, name, ouner) in gameboards:
     answer.append([
       InlineKeyboardButton(
-        text=f"попросить {name} у {ouner}", 
-        callback_data=f"{id} {name} {ouner}"
+        text=f"попросить {name} у {ouner.name}", 
+        callback_data=f"{id} {name} {ouner.id} {ouner.telegram_id} {ouner.name}"
       )
     ])
   answer.append([
@@ -42,7 +43,7 @@ async def catcher(message: types.Message, state: FSMContext):
 @router.callback_query(StateFilter(States.open_view_games))
 async def button_touch(callback: types.CallbackQuery, state: FSMContext):
   data = callback.data
-  user = User.load(callback.from_user.id)
+  from_user = User.load(callback.from_user.id)
   if data == "close":
     await state.clear()
     await state.set_state(None)
@@ -51,6 +52,10 @@ async def button_touch(callback: types.CallbackQuery, state: FSMContext):
     """)
   else:
     args = data.split()
-    await callback.message.answer(f"""{user.name} попросил {args[1]} у {args[2]}""")
+    to_user = User.User(int(args[2]), int(args[3]), args[2])
+    game_id = int(args[0])
+    game_name = args[1]
+    await ask.ask(from_user, to_user, game_id, game_name)
+    await callback.message.answer(f"""{from_user.name} попросил {game_name} у {to_user}""")
 
 

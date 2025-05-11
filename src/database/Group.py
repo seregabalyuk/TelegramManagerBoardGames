@@ -71,7 +71,7 @@ class Group:
 
   def all_gameboards(self):
     select_query = """
-    SELECT bg.id, tbg.name, u.name
+    SELECT bg.id, tbg.name, u.id, u.telegram_id, u.name
     FROM boardgames bg
     JOIN types_boardgames tbg ON bg.type_boardgame_id = tbg.id
     JOIN users u ON bg.owner_user_id = u.id
@@ -83,7 +83,11 @@ class Group:
     cursor = connect.cursor()
 
     cursor.execute(select_query,(self.id,))
-    return cursor.fetchall()
+    out = cursor.fetchall()
+    games = []
+    for id, name, u_id, u_tg, u_name in out:
+      games.append((int(id),name, User.User(u_id, u_tg, u_name)))
+    return games
       
 
 
