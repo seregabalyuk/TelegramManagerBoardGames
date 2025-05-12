@@ -9,7 +9,6 @@ class GameBoard:
     self.max_players = max_players
     self.playing_time = playing_time
     self.complexity = complexity
-    print(self.name)
 
 
 def load(id: int):

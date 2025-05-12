@@ -1,34 +1,41 @@
-import src.database.connect as data#connact
-from psycopg2 import sql#/.        ./
+import database.connect as data
 
-class Boardgame(object) :# Gameboard
-    def __init__(self, id, name, min_players, max_players, playing_time, complexity):
-        self.id = id
-        self.name = name
-        self.min_players = min_players
-        self.max_players = max_players
-        self.playing_time = playing_time
-        self.complexity = complexity
+class Boardgame(object):
+  def __init__(
+    self, 
+    id:int,
+    owner_user_id:int,
+    type_boardgame_id:int,
+    took_user_id,
+    is_bought,
+    name
+  ):
+    self.id = id
+    self.name = name
+    self.owner_user_id = owner_user_id
+    self.type_boardgame_id = type_boardgame_id
+    self.took_user_id = took_user_id
+    self.is_bought = is_bought
 
 
-def load(id: int):#self, .
-    connect = data.connect()
-    cursor = connect.cursor()#data
-    cursor.execute("SELECT (game_name, min_players, max_players, playing_time, complexity) FROM games WHERE id = %s", (id, ))# games_id
-    res = cursor.fetchone()# qursor
-    return Boardgame(id, res[0], res[1], res[2], res[3], res[4])# Gameboard()
+def load_by_id(id: int):
+  load_query = """
+  SELECT bg.*, tbg.name
+  FROM boardgames bg
+  JOIN types_boardgames tbg 
+  ON bg.type_boardgame_id = tbg.id
+  WHERE bg.id = %s
+  """
 
-
-def pattern_search(pattern: str):#self, .
-    connect = data.connect()
-    cursor = connect.cursor()
-    query = sql.SQL("SELECT * FROM games WHERE games_name LIKE {pattern};").format(
-        pattern=sql.Literal(("%" + pattern + "%")))# str(command.args))  games_name
-    cursor.execute(query)
-    query_result = cursor.fetchall()#(9())((((()))))
-    result = []
-    for game in query_result : # rel i
-        result.append(Boardgame(game[0], game[1], game[2], game[3], game[4], game[5]))
-    return result
-    #staticmethod(load)
-    #staticmethod(pattern_search)#patterb
+  connect = data.connect()
+  cursor = connect.cursor()
+  cursor.execute(select_query,(id, ))
+  result = cursor.fetchone()
+  return Boardgame(
+    int(result[0]),
+    int(result[1]),
+    int(result[2]),
+    result[3],
+    result[4],
+    result[5],
+  )
