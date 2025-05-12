@@ -65,6 +65,20 @@ class User:
     connect.commit()
     return can
 
+  def get_leased_games(self):
+    connect = data.connect()
+    cursor = connect.cursor()
+    cursor.execute("""
+    SELECT users.name, users.telegram_id, types_boardgames.name, boardgames.id 
+    FROM boardgames 
+    JOIN users 
+    ON users.id = owner_user_id 
+    JOIN types_boardgames 
+    ON types_boardgames.id = type_boardgame_id 
+    WHERE took_user_id = %s;""", 
+    (self.id, ))
+    return cursor.fetchall()
+
 
   def __str__(self):
     return str(self.id) + " " + str(self.telegram_id) + " " + self.name

@@ -15,6 +15,8 @@ class States(StatesGroup):
   open_view_games = State()
   # для ask
   get_answer_ask = State()
+  # для return
+  leased_shown = State()
   
 
   

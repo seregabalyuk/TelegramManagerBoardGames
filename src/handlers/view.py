@@ -46,7 +46,7 @@ async def button_touch(callback: types.CallbackQuery, state: FSMContext):
     await state.clear()
     await state.set_state(None)
     await callback.message.edit_text(f"""
-    {user.name} закрыл список игр.
+    {from_user.name} закрыл список игр.
     """)
   else:
     args = data.split()

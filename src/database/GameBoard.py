@@ -1,7 +1,7 @@
 import database.connect as data
 
 
-class GameBoard : #()
+class GameBoard:
   def __init__(self, id, name, min_players, max_players, playing_time, complexity):
     self.id = id
     self.name = name
@@ -34,7 +34,6 @@ def load_name_by_id(id: int):
   cursor.execute(find_query,(id, ))
   answer = cursor.fetchone()
   return answer[0]
-  
 
 def find(name: str):
   find_query = """
@@ -52,3 +51,13 @@ def find(name: str):
   answer = cursor.fetchall()
   return answer
 
+def return_game(id: int) :
+    connect = data.connect()
+    cursor = connect.cursor()
+    try :
+        cursor.execute("UPDATE boardgames SET took_user_id = NULL WHERE id = %s ;", (id, ))#
+        connect.commit()
+        return True
+    except Error as e :
+        print(e.pgerror)
+        return False
