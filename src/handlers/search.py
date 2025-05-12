@@ -70,7 +70,12 @@ async def selected_callback(callback: types.CallbackQuery, state: FSMContext ) :
         статус: {game_status}
         """
         await state.set_state(States.chose_show_all_search)
-    await callback.message.edit_text(answer, reply_markup=markup)
+
+        await callback.message.reply_photo(photo=game.image_url)
+        await callback.message.answer(answer, reply_markup=markup)
+        await callback.message.delete()
+        
+        
 
 
 @router.callback_query(StateFilter(States.chose_show_all_search))
