@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardButton
 #from src.database import Boardgame# BoardGame () .Boardgame
 
-from database import GameBoard, User
+from database import TypeBoardgame, User
 from handlers.States import States
 from handlers import ask
 
@@ -46,7 +46,7 @@ async def selected_callback(callback: types.CallbackQuery, state: FSMContext ) :
         """)
     else :
         args = data.split()
-        game = GameBoard.load(int(args[0]))
+        game = TypeBoardgame.load_by_id(int(args[0]))
         game_info = User.load(callback.from_user.id).check_game(game.id)
         game_status = ""
         if game_info is None :
@@ -62,7 +62,13 @@ async def selected_callback(callback: types.CallbackQuery, state: FSMContext ) :
         for button in add_buttons :
             buttons.append(button)
         markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-        answer = "Название: " + game.name + "\nМинимальное к-во игроков: " + str(game.min_players) + "\nМаксимальное к-во игроков: " + str(game.max_players) + "\nПродолжительность игры: " + str(game.playing_time) + "мин. \nстатус: " + game_status#"title: " "\n minimum players: " "\nmaximum players: " "\nsession duration: " " min\nstatus: "  + " ..."
+        answer = f"""
+        Название: {game.name}
+        Количество игроков: {game.min_players}-{game.max_players}
+        Продолжительность игры: {game.playing_time()} мин.
+        Возраст: {game.age}+
+        статус: {game_status}
+        """
         await state.set_state(States.chose_show_all_search)
     await callback.message.edit_text(answer, reply_markup=markup)
 
@@ -98,7 +104,7 @@ async def after_show(callback: types.CallbackQuery, state: FSMContext) :
                 wishlisted_str = wishlisted_str + row[3] + "(" + row[4] + ")\n"
         answer += with_game_str + wishlisted_str
     if args[-1] == "add" or args[-1] == "wishlist" : #else :  ar
-        if User.load(callback.from_user.id).add_boardgame(int(args[0]), args[2] == "add") : #
+        if User.load(callback.from_user.id).add_boardgame(int(args[0]), args[-1] == "add") : #
             answer = "Игра добавена"#"game added"
         else : #
             answer = "BRUH" #"somethings went wrong..."
@@ -120,7 +126,7 @@ async def ask_to(callback: types.CallbackQuery, state: FSMContext) :
         await state.clear()
         await state.set_state(None)
         await callback.message.delete()
-    game = GameBoard.load(int(args[0]))
+    game = TypeBoardgame.load_by_id(int(args[0]))
     print(args)
     message = callback.message
     print(User.load(callback.from_user.id), User.load(int(args[1])), game.id, game.name)

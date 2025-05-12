@@ -3,7 +3,7 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from database import User, Group
+from database import User, Group, Boardgame
 from handlers.States import States
 from handlers import ask
 
@@ -15,7 +15,7 @@ def create_buttons(gameboards):
     answer.append([
       InlineKeyboardButton(
         text=f"попросить {name} у {ouner.name}", 
-        callback_data=f"{id} {name} {ouner.id} {ouner.telegram_id} {ouner.name}"
+        callback_data=f"{id} {ouner.id}"
       )
     ])
   answer.append([
@@ -50,10 +50,9 @@ async def button_touch(callback: types.CallbackQuery, state: FSMContext):
     """)
   else:
     args = data.split()
-    to_user = User.User(int(args[2]), int(args[3]), args[4])
-    game_id = int(args[0])
-    game_name = args[1]
-    await ask.ask(from_user, to_user, game_id, game_name)
-    await callback.message.answer(f"""{from_user.name} попросил {game_name} у {to_user.name}""")
+    to_user = User.load_by_id(int(args[1]))
+    game = Boardgame.load_by_id(int(args[0]))
+    await ask.ask(from_user, to_user, game)
+    await callback.message.answer(f"""{from_user.name} попросил {game.name} у {to_user.name}""")
 
 

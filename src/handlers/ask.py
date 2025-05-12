@@ -12,16 +12,16 @@ from database import User, GameBoard
 
 router = Router()
 
-async def ask(from_user, to_user, game_id, game_name):
+async def ask(from_user, to_user, game):
   buttons = InlineKeyboardMarkup(inline_keyboard=[
     [
       InlineKeyboardButton(
         text="дать", 
-        callback_data=f"give {from_user.id} {game_id}"
+        callback_data=f"give {from_user.id} {game.id}"
       ),
       InlineKeyboardButton(
         text="отказаться",
-        callback_data=f"not_give {from_user.id} {game_id}"
+        callback_data=f"not_give {from_user.id} {game.id}"
       )
     ]
   ])
@@ -32,7 +32,7 @@ async def ask(from_user, to_user, game_id, game_name):
   # await state.set_state(States.get_answer_ask)
   await bl.bot.send_message(
     chat_id = to_user.telegram_id,
-    text = f"У тебя попросил {game_name} пользователь с именем {from_user.name}",
+    text = f"У тебя попросил {game.name} пользователь с именем {from_user.name}",
     reply_markup=buttons
   )
   return True

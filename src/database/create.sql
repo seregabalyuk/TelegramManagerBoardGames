@@ -6,11 +6,13 @@ CREATE TABLE users (
 
 CREATE TABLE types_boardgames (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     min_players INT,
     max_players INT,
-    playing_time INT,
-    complexity INT
+    min_playing_time INT,
+    max_playing_time INT,
+    age INT,
+    image_url VARCHAR(512)
 );
 
 CREATE TABLE groups (

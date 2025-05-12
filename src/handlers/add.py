@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from database import GameBoard, User
+from database import TypeBoardgame, User
 from handlers.States import States
 
 router = Router()
@@ -30,7 +30,7 @@ async def choose_place(callback: types.CallbackQuery, state: FSMContext):
   else:
     args = data.split()
     user = User.get(callback.from_user.id, callback.from_user.username)
-    game = GameBoard.load(int(args[0]))
+    game = TypeBoardgame.load_by_id(int(args[0]))
     buttons = InlineKeyboardMarkup(
       inline_keyboard=[
         [
@@ -57,7 +57,7 @@ async def finish(callback: types.CallbackQuery, state: FSMContext):
     args = data.split()
     place = "свою коллекцию" if args[1] == "collection" else "вишлист"
     user = User.get(callback.from_user.id, callback.from_user.username)
-    game = GameBoard.load(int(args[0]))
+    game = TypeBoardgame.load_by_id(int(args[0]))
     if user.add_boardgame(int(args[0]), args[1] == "collection"):
       await callback.message.edit_text(f"""Вы успешно добавили {game.name} в {place}""")
     else:

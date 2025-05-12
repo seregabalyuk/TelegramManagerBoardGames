@@ -19,7 +19,7 @@ class Boardgame(object):
 
 
 def load_by_id(id: int):
-  load_query = """
+  select_query = """
   SELECT bg.*, tbg.name
   FROM boardgames bg
   JOIN types_boardgames tbg 

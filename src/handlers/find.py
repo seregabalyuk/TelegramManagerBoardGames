@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from handlers.States import States
-from database import GameBoard
+from database import TypeBoardgame
 
 router = Router()
 
@@ -19,12 +19,12 @@ def create_buttons(boardgames):
 @router.message(States.wrote_find_text)
 async def give_chosen(message: types.Message, state: FSMContext):
   boardgame_name = message.text
-  boardgames = GameBoard.find(boardgame_name)
+  boardgames = TypeBoardgame.find(boardgame_name)
   data = await state.get_data()
   if len(boardgames) == 0:
     await state.clear()
     await state.set_state(None)
-    await message.answer(f"Я не нашёл {boardgame_name}. Попробуйте еще раз /{command}")
+    await message.answer(f"Я не нашёл {boardgame_name}. Попробуйте еще раз /{data["command"]}")
   else:
     buttons = create_buttons(boardgames)
     if data["command"] == "add":
