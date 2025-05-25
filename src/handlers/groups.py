@@ -30,13 +30,13 @@ async def bot_added_to_chat(event: types.ChatMemberUpdated):
     url=bot_link
   )
   answer = f"""
-  Привет\\!
-  Вы можете перейти по ссылке и добавиться в группу
+Привет!
+Вы можете перейти по ссылке и добавиться в группу!
+Так же вы можете посмотреть игры в своей группе нажав на /view.
   """
   await event.answer(
     answer,
-    reply_markup=builder.as_markup(),
-    parse_mode=ParseMode.MARKDOWN_V2
+    reply_markup=builder.as_markup()
   )
 
 

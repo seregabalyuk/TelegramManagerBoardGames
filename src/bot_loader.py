@@ -11,7 +11,9 @@ from handlers import (
   find,
   view,
   ask,
-  returning
+  returning,
+  delete,
+  help
 )
 import token_loader
 
@@ -28,14 +30,17 @@ dp.include_router(find.router)
 dp.include_router(view.router)
 dp.include_router(ask.router)
 dp.include_router(returning.router)
+dp.include_router(delete.router)
+dp.include_router(help.router)
 
 
 async def set_bot_commands(bot: Bot):
   commands = [
     BotCommand(command="/start", description="Запуск бота"),
+    BotCommand(command="/help", description="Помощь"),
     BotCommand(command="/add", description="Добавить настольную игру"),
     BotCommand(command="/search", description="Найти игру"),
     BotCommand(command="/view", description="Посмотреть игры"),
-    BotCommand(command="/return", description="Вернуть игру"),
+    BotCommand(command="/return", description="Вернуть игру")
   ]
   await bot.set_my_commands(commands)

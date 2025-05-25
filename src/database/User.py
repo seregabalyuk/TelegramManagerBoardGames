@@ -1,5 +1,8 @@
 import database.connect as data
 
+class Data:
+  pass
+
 class User:
   def __init__(self, id:int, telegram_id:int, name):
     self.id = id
@@ -35,17 +38,53 @@ class User:
       AND type_boardgame_id = %s""", 
       (self.id, game_id)
     )
-    return cursor.fetchone()
+    return cursor.fetchall()
 
-  def get_friends(self, with_game_id=None ):#вуаu Na
+  def get_friends(self, with_game_id:int|None=None, is_bought:bool=True):#вуаu Na
     connect = data.connect()
     cursor = connect.cursor()
     if with_game_id is None :
-      cursor.execute("SELECT users.name, groups.name FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(self.id), ))
-
+      cursor.execute("""
+      SELECT DISTINCT u.*, g.id as group_id, g.name as group_name
+      FROM users user_a
+      JOIN groups_members gm_a ON user_a.id = gm_a.user_id
+      JOIN groups g ON gm_a.group_id = g.id
+      JOIN groups_members gm_other ON g.id = gm_other.group_id
+      JOIN users u ON gm_other.user_id = u.id
+      WHERE user_a.id = %s
+        AND u.id != %s
+      """, (int(self.id), int(self.id)))
     else :
-      cursor.execute("WITH with_game AS (SELECT owner_user_id, took_user_id, is_bought FROM boardgames WHERE type_boardgame_id = %s) SELECT users.id, took_user_id, is_bought, users.name, groups.name, users.telegram_id FROM groups_members JOIN users ON users.id = user_id JOIN groups ON groups.id = group_id JOIN with_game ON with_game.owner_user_id = user_id WHERE group_id IN (SELECT group_id FROM groups_members WHERE user_id = %s)", (int(with_game_id), int(self.id)))
-    return cursor.fetchall()
+      cursor.execute("""
+      SELECT DISTINCT other_users.*, g.id as group_id, g.name as group_name, bg.id as game_id, bg.took_user_id as took_id
+      FROM users user_a
+      JOIN groups_members gm_a ON user_a.id = gm_a.user_id
+      JOIN groups g ON gm_a.group_id = g.id
+      JOIN groups_members gm_other ON g.id = gm_other.group_id
+      JOIN users other_users ON gm_other.user_id = other_users.id
+      JOIN boardgames bg ON other_users.id = bg.owner_user_id
+      WHERE user_a.id = %s
+        AND bg.type_boardgame_id = %s
+        AND other_users.id != %s
+        AND bg.is_bought = %s
+      """, (self.id, with_game_id, self.id, is_bought))
+    out = []
+    for ans in cursor.fetchall():
+      obj = Data()
+      obj.user = User(int(ans[0]), int(ans[1]), ans[2])
+      obj.group = Data()
+      obj.group.id = int(ans[3])
+      obj.group.name = ans[4]
+
+      if not with_game_id is None:
+        obj.game = Data()
+        obj.game.id = int(ans[5])
+        obj.game.took = ans[6]
+        obj.game.name = None
+        
+      
+      out.append(obj)
+    return out
 
   def give_game(self, game_id:int, user_other):
     update_query = """
@@ -77,6 +116,25 @@ class User:
     ON types_boardgames.id = type_boardgame_id 
     WHERE took_user_id = %s;""", 
     (self.id, ))
+    return cursor.fetchall()
+
+  def get_games(self, is_bought = True):
+    connect = data.connect()
+    cursor = connect.cursor()
+
+    cursor.execute("""
+    SELECT types_boardgames.name, took_user_id, type_boardgame_id, boardgames.id
+    FROM boardgames JOIN types_boardgames 
+    ON types_boardgames.id = type_boardgame_id 
+    WHERE owner_user_id = %s AND is_bought = %s
+    """, (self.id, is_bought))
+    return cursor.fetchall()
+
+  def get_groups(self):
+    connect = data.connect()
+    cursor = connect.cursor()
+    cursor.execute("SELECT groups.telegram_id, groups.name FROM groups_members JOIN groups ON groups.id = group_id JOIN users ON users.id = user_id WHERE users.telegram_id = %s;", (self.telegram_id, ))
+
     return cursor.fetchall()
 
 
@@ -122,7 +180,7 @@ def load(telegram_id: int):
   )
 
 
-def get(telegram_id: int, name: str, registreted=False):
+def get(telegram_id: int, name: str, registreted=True):
   select_query = """
   SELECT id, name
   FROM users 
@@ -135,10 +193,10 @@ def get(telegram_id: int, name: str, registreted=False):
   cursor.execute(select_query,(telegram_id, ))
   result = cursor.fetchone()
   if result:
-    registreted = False
+    registreted = [False]
     return User(int(result[0]), telegram_id, result[1])
   else:
-    registreted = True
+    registreted = [True]
     return register(telegram_id, name)
 
 
@@ -154,9 +212,31 @@ def load_by_id(id:int):
 
   cursor.execute(select_query,(id, ))
   res = cursor.fetchone()
-
+  if res is None:
+    return None
   return User(
     id,
     int(res[0]), 
     res[1]
+  )
+
+
+def load_by_name(name:str):
+  select_query = """
+  SELECT id, telegram_id
+  FROM users 
+  WHERE name = %s
+  """
+
+  connect = data.connect()
+  cursor = connect.cursor()
+
+  cursor.execute(select_query,(name, ))
+  res = cursor.fetchone()
+  if res is None:
+    return None
+  return User(
+    int(res[0]),
+    int(res[1]), 
+    name
   )

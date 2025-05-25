@@ -3,6 +3,9 @@ import random
 
 from  database import User
 
+class Data:
+  pass
+
 
 class Group:
   def __init__(self, id, telegram_id, name, password):
@@ -86,7 +89,10 @@ class Group:
     out = cursor.fetchall()
     games = []
     for id, name, u_id, u_tg, u_name in out:
-      games.append((int(id),name, User.User(int(u_id), int(u_tg), u_name)))
+      obj = Data()
+      obj.id = int(id)
+      obj.name = name
+      games.append((obj, User.User(int(u_id), int(u_tg), u_name)))
     return games
       
 

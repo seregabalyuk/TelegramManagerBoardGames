@@ -17,6 +17,17 @@ class Boardgame(object):
     self.took_user_id = took_user_id
     self.is_bought = is_bought
 
+  def delete(self):
+    delete_query = """
+    DELETE FROM boardgames
+    WHERE id = %s
+    """
+    connect = data.connect()
+    cursor = connect.cursor()
+
+    cursor.execute(delete_query,(self.id, ))
+    
+    connect.commit()
 
 def load_by_id(id: int):
   select_query = """
@@ -39,3 +50,15 @@ def load_by_id(id: int):
     result[4],
     result[5],
   )
+
+
+def return_game(id: int) :
+  connect = data.connect()
+  cursor = connect.cursor()
+  try :
+    cursor.execute("UPDATE boardgames SET took_user_id = NULL WHERE id = %s ;", (id, ))#
+    connect.commit()
+    return True
+  except Error as e :
+    print(e.pgerror)
+    return False

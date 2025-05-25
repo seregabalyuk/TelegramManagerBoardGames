@@ -14,17 +14,20 @@ async def cmd_start(message: types.Message):
   last_name = message.from_user.last_name
   username = message.from_user.username
   id = message.from_user.id
-
+  if username is None:
+    username = first_name
+    if not last_name is None:
+      username += last_name
+  
   args = message.text.split()
   user = None
-  registreted = False
   answer = ""
-
   # регистрация и добавление в группу
   try:
-    user = User.get(id, username, registreted)
-  except:
+    user = User.get(id, username)
+  except Exception as error:
     print ("cannot load user. with error:" + repr(error))
+  
   if (user == None):
     answer = f"""
     Привет \\!
@@ -32,12 +35,10 @@ async def cmd_start(message: types.Message):
     База данных полетела(
     """
   else:
-    if registreted:
-      answer = f"""
-      Привет {first_name} {last_name}\\!
-      Я бот, который поможет отслеживать настольные игры твои и твоих друзей\\!"""
-    else:
-      answer = f"""Привет {first_name} {last_name}\\!"""
+    answer = f"""
+Привет {first_name} {last_name}\\!
+Я бот, который поможет отслеживать настольные игры твои и твоих друзей\\!
+Для подробной информации нажмите /help"""
     if len(args) > 1:
       param = args[1].split(sep='_')
       group_id = int(param[0])
